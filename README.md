@@ -4,11 +4,11 @@ Please check the official laravel installation guide for server requirements bef
 
 Clone the repository 
 
-    git clone https://github.com/viilance/batterium-test.git
+    git clone https://github.com/viilance/renhead-test.git
 
 Switch to the repo folder
 
-    cd batterium-test
+    cd renhead-test
 
 Install all the dependencies using composer
 
@@ -42,8 +42,8 @@ You can now access the application at http://localhost
 
 **TL;DR command list**
 
-    git clone https://github.com/viilance/batterium-test.git
-    cd batterium-test
+    git clone https://github.com/viilance/renhead-test.git
+    cd renhead-test
     composer install
     cp .env.example .env
     sudo apt-get install php-mysql
