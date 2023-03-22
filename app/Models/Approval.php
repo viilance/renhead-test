@@ -23,6 +23,16 @@ class Approval extends Model
     /**
      * @var string[]
      */
+    protected $visible = [
+        'id',
+        'user_id',
+        'job_id',
+        'status',
+    ];
+
+    /**
+     * @var string[]
+     */
     protected array $enumStatuses = [
         'APPROVED',
         'DISAPPROVED',

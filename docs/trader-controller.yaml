@@ -1,0 +1,165 @@
+openapi: "3.0.3"
+info:
+  title: Trader API
+  version: 1.0.0
+servers:
+  - url: http://localhost/api
+paths:
+  /traders:
+    get:
+      summary: Get a list of traders
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: An array of traders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trader'
+        '401':
+          description: Unauthorized
+    post:
+      summary: Create a new trader
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTrader'
+      responses:
+        '200':
+          description: Trader created successfully
+        '401':
+          description: Unauthorized
+        '422':
+          description: Validation error
+
+  /traders/{id}:
+    get:
+      summary: Get a trader by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A trader object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trader'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Trader not found
+
+    put:
+      summary: Update a trader by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTrader'
+      responses:
+        '200':
+          description: Trader updated successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Trader not found
+        '422':
+          description: Validation error
+
+    delete:
+      summary: Delete a trader by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Trader deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Trader not found
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    Trader:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user_id:
+          type: integer
+        working_hours:
+          type: number
+          format: float
+        payroll_per_hour:
+          type: number
+          format: float
+
+    CreateTrader:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        working_hours:
+          type: number
+          format: float
+        payroll_per_hour:
+          type: number
+          format: float
+
+    UpdateTrader:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        working_hours:
+          type: number
+          format: float
+        payroll_per_hour:
+          type: number
+          format: float

@@ -13,27 +13,14 @@ return new class extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
-            $table->string('employee_type');
             $table->unsignedBigInteger('employee_id');
+            $table->string('employee_type');
             $table->date('date');
             $table->float('total_hours');
             $table->timestamps();
             $table->softDeletes();
-        });
 
-        Schema::table('jobs', function (Blueprint $table) {
-            $table->foreign('employee_id')
-                ->references('id')
-                ->on('professors')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->foreign('employee_id')
-                ->references('id')
-                ->on('traders')
-                ->onDelete('cascade')
-                ->onUpdate('cascade')
-                ->after('employee_id')
-                ->name('jobs_traders_employee_id_foreign');
+            $table->index(['employee_id', 'employee_type']);
         });
     }
 
