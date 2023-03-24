@@ -1,0 +1,207 @@
+openapi: "3.0.3"
+info:
+  title: "Approval API"
+  version: "1.0.0"
+servers:
+  - url: http://localhost/api
+paths:
+  /approvals:
+    get:
+      summary: List all approvals
+      description: Returns a list of all approvals.
+      responses:
+        200:
+          description: A list of approvals
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  approvals:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Approval'
+    post:
+      summary: Create a new approval
+      description: Creates a new approval and returns the created approval.
+      requestBody:
+        description: The approval to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApprovalRequest'
+      responses:
+        200:
+          description: The created approval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Approval'
+        400:
+          description: The approval creation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /approvals/{id}:
+    get:
+      summary: Get an approval by ID
+      description: Returns a single approval identified by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the approval to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: The requested approval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Approval'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+    put:
+      summary: Update an approval
+      description: Updates an existing approval and returns the updated approval.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the approval to update
+          schema:
+            type: string
+      requestBody:
+        description: The approval to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateApprovalRequest'
+      responses:
+        200:
+          description: The updated approval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Approval'
+        400:
+          description: The approval update failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+    delete:
+      summary: Delete an approval
+      description: Deletes an approval identified by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the approval to delete
+          schema:
+            type: string
+      responses:
+        204:
+          description: The approval was deleted successfully
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+  /approvals/{id}/approve:
+    patch:
+      summary: Approve a job approval
+      description: Approves a job approval identified by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the job approval to approve
+          schema:
+            type: integer
+      responses:
+        200:
+          description: The job approval was approved successfully
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+
+  /approvals/{id}/disapprove:
+    patch:
+      summary: Disapprove a job approval
+      description: Disapproves a job approval identified by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the job approval to disapprove
+          schema:
+            type: integer
+      responses:
+        200:
+          description: The job approval was disapproved successfully
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+
+components:
+  schemas:
+    Approval:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        job_id:
+          type: integer
+        status:
+          type: string
+          enum: [APPROVED, DISAPPROVED]
+      required:
+        - user_id
+        - job_id
+        - status
+    CreateApprovalRequest:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        job_id:
+          type: integer
+        status:
+          type: string
+      required:
+        - user_id
+        - job_id
+        - status
+    UpdateApprovalRequest:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          description: The ID of the user associated with the approval
+        job_id:
+          type: integer
+          description: The ID of the job associated with the approval
+        status:
+          type: string
+          enum: [APPROVED, DISAPPROVED]
+          description: The status of the approval
+  responses:
+    NotFoundResponse:
+      description: The specified resource was not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
